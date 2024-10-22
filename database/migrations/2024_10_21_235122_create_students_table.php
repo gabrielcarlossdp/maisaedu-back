@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->integer('ra')->unsigned()->unique();
-            $table->bigInteger('cpf')->unsigned();
+            $table->string('ra', 10)->unique();
+            $table->string('cpf', 14);
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class StudentFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'ra' => fake()->randomNumber(7),
+            'ra' => strval(fake()->randomNumber(7)),
             'cpf' =>fake()->cpf(false),
         ];
     }

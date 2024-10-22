@@ -23,9 +23,9 @@ class StoreStudentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:students'],
-            'ra' => ['required', 'integer', 'digits_between:1,10', 'unique:students'],
-            'cpf' => ['required', 'integer', 'digits:11'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'ra' => ['required', 'string', 'max:10', 'unique:students'],
+            'cpf' => ['required', 'string', 'max:14'],
         ];
     }
 }
