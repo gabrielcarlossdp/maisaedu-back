@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
-use App\Models\Student;
+use App\Http\Resources\StudentResource;
+use App\Services\StudentService;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class StudentController extends Controller
 {
+    public function __construct(protected StudentService $studentService) {}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return Student::all();
+            return StudentResource::collection($this->studentService->getStudents($request));
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 
@@ -31,7 +35,7 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         try {
-            return Student::create($request->all());
+            return $this->studentService->createStudent($request);
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 
@@ -42,10 +46,17 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show(int $studentId)
     {
         try {
+            $student = $this->studentService->getStudent($studentId);
+
+            if (! $student) {
+                return response()->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+            }
+
             return $student;
+
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 
@@ -56,13 +67,18 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(UpdateStudentRequest $request, int $studentId)
     {
         try {
-            return $student->update([
-                'name' => $request->name,
-                'email' => $request->email,
-            ]);
+
+            $student = $this->studentService->getStudent($studentId);
+
+            if (! $student) {
+                return response()->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->studentService->updateStudent($request, $studentId);
+
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 
@@ -73,10 +89,19 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy(int $studentId)
     {
         try {
-            return response()->json($student->delete(), Response::HTTP_NO_CONTENT);
+
+            $student = $this->studentService->getStudent($studentId);
+
+            if (! $student) {
+                return response()->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            $student = $this->studentService->deleteStudent($studentId);
+
+            return response()->json($student, Response::HTTP_NO_CONTENT);
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 

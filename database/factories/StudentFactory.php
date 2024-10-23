@@ -22,7 +22,7 @@ class StudentFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'ra' => strval(fake()->randomNumber(7)),
-            'cpf' =>fake()->cpf(false),
+            'cpf' => fake()->cpf(false),
         ];
     }
 }
