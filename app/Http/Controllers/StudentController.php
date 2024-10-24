@@ -20,21 +20,25 @@ class StudentController extends Controller
 
     /**
      * Display a listing of the student.
-     * 
+     *
      * @OA\Get(
      *      path="/students",
      *      summary="Get list of students",
      *      tags={"Students"},
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(
      *               oneOf={
+     *
      *                      @OA\Schema(ref="#/components/schemas/StudentPaginate"),
      *                      @OA\Schema(ref="#/components/schemas/Student")
      *             }
      *         )
      *      ),
+     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -47,46 +51,56 @@ class StudentController extends Controller
      *          response=500,
      *          description="Internal Server Error"
      *      ),
+     *
      *      @OA\Parameter(
      *          name="page",
      *          in="query",
      *          required=false,
+     *
      *          @OA\Schema(
      *              type="integer",
      *              example=1
      *          )
      *      ),
+     *
      *      @OA\Parameter(
      *          name="per_page",
      *          in="query",
      *          required=false,
+     *
      *          @OA\Schema(
      *              type="integer",
      *              example=10
      *          )
      *      ),
+     *
      *      @OA\Parameter(
      *          name="search",
      *          in="query",
      *          required=false,
+     *
      *          @OA\Schema(
      *              type="string",
      *              example="John"
      *          )
      *      ),
+     *
      *      @OA\Parameter(
      *          name="order",
      *          in="query",
      *          required=false,
+     *
      *          @OA\Schema(
      *              type="string",
      *              example="name"
      *          )
      *      ),
+     *
      *      @OA\Parameter(
      *          name="order_by",
      *          in="query",
      *          required=false,
+     *
      *          @OA\Schema(
      *              type="string",
      *              example="asc"
@@ -94,7 +108,6 @@ class StudentController extends Controller
      *      ),
      *      security={ {"sanctum": {}} }
      * )
-     *    
      */
     public function index(Request $request)
     {
@@ -109,20 +122,25 @@ class StudentController extends Controller
 
     /**
      * Store a newly created student in storage.
-     * 
+     *
      * @OA\Post(
      *      path="/students",
      *      summary="Create new student",
      *      tags={"Students"},
+     *
      *      @OA\RequestBody(
      *          required=true,
+     *
      *          @OA\JsonContent(ref="#/components/schemas/StudentCreate")
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/Student")
      *      ),
+     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -141,7 +159,6 @@ class StudentController extends Controller
      *      ),
      *      security={ {"sanctum": {}} }
      * )
-     *
      */
     public function store(StoreStudentRequest $request)
     {
@@ -156,25 +173,30 @@ class StudentController extends Controller
 
     /**
      * Display the specified student.
-     * 
+     *
      * @OA\Get(
      *      path="/students/{studentId}",
      *      summary="Get student by id",
      *      tags={"Students"},
+     *
      *      @OA\Parameter(
      *          name="studentId",
      *          in="path",
      *          required=true,
+     *
      *          @OA\Schema(
      *              type="integer",
      *              example=1
      *          )
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/Student")
      *      ),
+     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -193,7 +215,6 @@ class StudentController extends Controller
      *      ),
      *      security={ {"sanctum": {}} }
      * )
-     *     
      */
     public function show(int $studentId)
     {
@@ -215,29 +236,36 @@ class StudentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @OA\Put(
      *      path="/students/{studentId}",
      *      summary="Update student",
      *      tags={"Students"},
+     *
      *      @OA\Parameter(
      *          name="studentId",
      *          in="path",
      *          required=true,
+     *
      *          @OA\Schema(
      *              type="integer",
      *              example=1
      *          )
      *      ),
+     *
      *      @OA\RequestBody(
      *          required=true,
+     *
      *          @OA\JsonContent(ref="#/components/schemas/StudentUpdate")
      *      ),
+     *
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent(ref="#/components/schemas/Student")
      *      ),
+     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -256,7 +284,6 @@ class StudentController extends Controller
      *      ),
      *      security={ {"sanctum": {}} }
      * )
-     *     
      */
     public function update(UpdateStudentRequest $request, int $studentId)
     {
@@ -279,25 +306,30 @@ class StudentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @OA\Delete(
      *      path="/students/{studentId}",
      *      summary="Delete student",
      *      tags={"Students"},
+     *
      *      @OA\Parameter(
      *          name="studentId",
      *          in="path",
      *          required=true,
+     *
      *          @OA\Schema(
      *              type="integer",
      *              example=1
      *          )
      *      ),
+     *
      *      @OA\Response(
      *          response=204,
      *          description="Successful operation",
+     *
      *          @OA\JsonContent()
      *      ),
+     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -316,7 +348,6 @@ class StudentController extends Controller
      *      ),
      *      security={ {"sanctum": {}} }
      * )
-     *
      */
     public function destroy(int $studentId)
     {

@@ -19,24 +19,31 @@ class AuthenticationController extends Controller
      *     tags={"Authentication"},
      *     summary="Logs in a user",
      *     description="Logs in a user and returns an authentication token",
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             type="object",
      *             required={"email", "password"},
+     *
      *             @OA\Property(property="email", type="string", format="email"),
      *             @OA\Property(property="password", type="string", format="password")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(property="user", ref="#/components/schemas/User"),
      *             @OA\Property(property="token", type="string")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Invalid credentials"
@@ -77,26 +84,33 @@ class AuthenticationController extends Controller
      *     tags={"Authentication"},
      *     summary="Registers a new user",
      *     description="Registers a new user and returns an authentication token",
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             type="object",
      *             required={"name", "email", "password", "password_confirmation"},
+     *
      *             @OA\Property(property="name", type="string"),
      *             @OA\Property(property="email", type="string", format="email"),
      *             @OA\Property(property="password", type="string", format="password"),
      *             @OA\Property(property="password_confirmation", type="string", format="password")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Successful operation",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(property="user", ref="#/components/schemas/User"),
      *             @OA\Property(property="token", type="string")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation failed"
@@ -121,7 +135,6 @@ class AuthenticationController extends Controller
     /**
      * Revoke the token for the authenticated user.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     /**
@@ -132,14 +145,18 @@ class AuthenticationController extends Controller
      *     description="Remove the token for the authenticated user.",
      *     operationId="logout",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(property="message", type="string", example="Logged out")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
@@ -165,11 +182,14 @@ class AuthenticationController extends Controller
      *     description="Get the user that is authenticated",
      *     operationId="me",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="User",
+     *
      *         @OA\JsonContent(ref="#/components/schemas/User")
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
