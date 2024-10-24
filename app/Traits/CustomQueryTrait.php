@@ -15,9 +15,9 @@ trait CustomQueryTrait
      * @param  mixed  $query  The query to filter, search, order, and paginate.
      * @param  Request  $request  The request containing filter, search, sort, and pagination parameters.
      * @param  array  $fields  The fields to apply the filter, search, and sort operations.
-     * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+     * @return Collection|LengthAwarePaginator The filtered, searched, ordered, and paginated query results.
      */
-    public function cfilterSeachOrderPaginate(mixed $query, Request $request, array $fields): LengthAwarePaginator|Collection
+    public function cfilterSeachOrderPaginate(mixed $query, Request $request, array $fields): Collection|LengthAwarePaginator
     {
         $this->cFilter($query, $request->filter, $fields);
         $this->cSearch($query, $request->search, $fields);
@@ -94,9 +94,9 @@ trait CustomQueryTrait
      *
      * @param  mixed  $query  The query to paginate.
      * @param  int|null  $pageSize  The number of items per page.
-     * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+     * @return Collection|LengthAwarePaginator The paginated query results.
      */
-    public function cPaginate(mixed &$query, ?int $pageSize): LengthAwarePaginator|Collection
+    public function cPaginate(mixed &$query, ?int $pageSize): Collection|LengthAwarePaginator
     {
         if ($pageSize) {
             return $query->paginate($pageSize)->withQueryString();

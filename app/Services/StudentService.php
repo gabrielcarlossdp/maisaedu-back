@@ -12,7 +12,7 @@ class StudentService
 {
     use CustomQueryTrait;
 
-    public function getStudents(Request $request): LengthAwarePaginator|Collection
+    public function getStudents(Request $request): Collection|LengthAwarePaginator
     {
         return $this->cfilterSeachOrderPaginate(Student::query(), $request, [
             'name',
