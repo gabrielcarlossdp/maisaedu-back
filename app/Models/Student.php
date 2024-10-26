@@ -16,4 +16,9 @@ class Student extends Model
         'ra',
         'cpf',
     ];
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class);
+    }
 }
