@@ -37,6 +37,19 @@ Endereço da API = https://maisaedu-back-production.up.railway.app
 * **Qualidade do código:** Utiliza ferramentas como Laravel Pint e Laravel Sanctum para garantir a qualidade e segurança do código.
 * **Testes:** Emprega PHPUnit e Pest para escrever testes unitários e garantir a corretude da aplicação.
 
+## Ambiente de Desenvolvimento Docker
+
+Este repositório contém a configuração para um ambiente de desenvolvimento utilizando Docker. O ambiente inclui os seguintes serviços:
+
+* **PHP:** Para a aplicação.
+* **Nginx:** Como servidor web.
+* **Supervisord:** Permite monitorar e controlar processos em sistemas.
+* **MySQL:** Para o banco de dados.
+
+### Pré-requisitos
+* Docker instalado e em funcionamento
+* Docker Compose instalado
+
 ## Outras características
 
 * **[Documentação](https://maisaedu-back-production.up.railway.app/api/documentation):** A API é documentada utilizando Swagger, facilitando a compreensão e o uso.
@@ -67,12 +80,10 @@ Endereço da API = https://maisaedu-back-production.up.railway.app
 
 ### Escalabilidade e Deploy
 * **Balanceamento de Carga:** Configuração da aplicação para funcionar em múltiplos servidores, distribuindo o tráfego e aumentando a capacidade.
-* **Docker:** Utilização de containers Docker para desenvolvimento, testes e deploy da aplicação.
 
 ### Ferramentas e Fluxos de Trabalho
 * **Horizon:** Ferramenta para gerenciar e monitorar filas de jobs.
 * **Telescope:** Ferramenta para inspecionar requisições, logs e outras informações da aplicação.
-* **GitFlow:** Fluxo de trabalho de versionamento de código para gerenciar diferentes branches e releases.
 
 ### Bancos de Dados
 * **Experiência com diversos bancos de dados:** SQL Server, MySQL, SQLite, PostgreSQL, MongoDB, Redis e Firebase Database.
