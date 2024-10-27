@@ -117,7 +117,10 @@ class TeamService
      */
     public function addStudentToTeam(Request $request, int $teamId): TeamStudentAssociation
     {
-        $association = TeamStudentAssociation::create([
+        $association = TeamStudentAssociation::updateOrCreate([
+            'team_id' => $teamId,
+            'student_id' => $request->input('student_id'),
+        ],[
             'team_id' => $teamId,
             'student_id' => $request->input('student_id'),
         ]);
