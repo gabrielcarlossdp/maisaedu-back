@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTeamRequest;
-use App\Http\Requests\UpdateTeamRequest;
-use App\Http\Resources\TeamResource;
+use App\Http\Requests\AddStudentToTeamRequest;
+use App\Http\Resources\StudentResource;
 use App\Services\TeamService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class TeamController extends Controller
+class TeamStudentAssociationController extends Controller
 {
-    public function __construct(protected TeamService $teamService) {}
+    public function __construct(private TeamService $teamService) {}
 
     /**
-     * Display a listing of the team.
+     * Display a listing of the student on a team.
      *
      * @OA\Get(
-     *      path="/teams",
-     *      summary="Get list of teams",
-     *      tags={"Teams"},
+     *      path="/team/{teamId}/students",
+     *      summary="Get list of students on a team",
+     *      tags={"TeamStudentAssociations"},
      *
      *      @OA\Response(
      *          response=200,
@@ -30,8 +28,8 @@ class TeamController extends Controller
      *          @OA\JsonContent(
      *               oneOf={
      *
-     *                      @OA\Schema(ref="#/components/schemas/TeamPaginate"),
-     *                      @OA\Schema(ref="#/components/schemas/Team")
+     *                      @OA\Schema(ref="#/components/schemas/StudentPaginate"),
+     *                      @OA\Schema(ref="#/components/schemas/Student")
      *             }
      *         )
      *      ),
@@ -106,10 +104,18 @@ class TeamController extends Controller
      *      security={ {"sanctum": {}} }
      * )
      */
-    public function index(Request $request)
+    public function index(int $teamId)
     {
         try {
-            return TeamResource::collection($this->teamService->getTeams($request));
+
+            $team = $this->teamService->getTeam($teamId);
+
+            if (! $team) {
+                return response()->json(['message' => 'Team not found'], Response::HTTP_NOT_FOUND);
+            }
+
+            return StudentResource::collection($this->teamService->listStudentsByTeam($teamId));
+
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 
@@ -118,126 +124,12 @@ class TeamController extends Controller
     }
 
     /**
-     * Store a newly created team in storage.
+     * Adds a student to a team.
      *
      * @OA\Post(
-     *      path="/teams",
-     *      summary="Create new team",
-     *      tags={"Teams"},
-     *
-     *      @OA\RequestBody(
-     *          required=true,
-     *
-     *          @OA\JsonContent(ref="#/components/schemas/TeamCreate")
-     *      ),
-     *
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *
-     *          @OA\JsonContent(ref="#/components/schemas/Team")
-     *      ),
-     *
-     *      @OA\Response(
-     *          response=400,
-     *          description="Bad Request"
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthorized"
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Resource Not Found"
-     *      ),
-     *      @OA\Response(
-     *          response=500,
-     *          description="Internal Server Error"
-     *      ),
-     *      security={ {"sanctum": {}} }
-     * )
-     */
-    public function store(StoreTeamRequest $request)
-    {
-        try {
-            return $this->teamService->createTeam($request, auth()->user()->id);
-        } catch (Throwable $th) {
-            Log::error($th->getMessage());
-
-            return response()->json(['message' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * Display the specified team.
-     *
-     * @OA\Get(
-     *      path="/teams/{teamId}",
-     *      summary="Get team by id",
-     *      tags={"Teams"},
-     *
-     *      @OA\Parameter(
-     *          name="teamId",
-     *          in="path",
-     *          required=true,
-     *
-     *          @OA\Schema(
-     *              type="integer",
-     *              example=1
-     *          )
-     *      ),
-     *
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *
-     *          @OA\JsonContent(ref="#/components/schemas/Team")
-     *      ),
-     *
-     *      @OA\Response(
-     *          response=400,
-     *          description="Bad Request"
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthorized"
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Resource Not Found"
-     *      ),
-     *      @OA\Response(
-     *          response=500,
-     *          description="Internal Server Error"
-     *      ),
-     *      security={ {"sanctum": {}} }
-     * )
-     */
-    public function show(int $teamId)
-    {
-        try {
-            $team = $this->teamService->getTeam($teamId);
-
-            if (! $team) {
-                return response()->json(['message' => 'Team not found'], Response::HTTP_NOT_FOUND);
-            }
-
-            return $team;
-
-        } catch (Throwable $th) {
-            Log::error($th->getMessage());
-
-            return response()->json(['message' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @OA\Put(
-     *      path="/teams/{teamId}",
-     *      summary="Update team",
-     *      tags={"Teams"},
+     *      path="/teams/{teamId}/students",
+     *      summary="Add student to team",
+     *      tags={"TeamStudentAssociations"},
      *
      *      @OA\Parameter(
      *          name="teamId",
@@ -253,16 +145,13 @@ class TeamController extends Controller
      *      @OA\RequestBody(
      *          required=true,
      *
-     *          @OA\JsonContent(ref="#/components/schemas/TeamCreate")
+     *          @OA\JsonContent(ref="#/components/schemas/AddStudentToTeamRequest")
      *      ),
      *
      *      @OA\Response(
      *          response=200,
-     *          description="Successful operation",
-     *
-     *          @OA\JsonContent(ref="#/components/schemas/Team")
+     *          description="Successful operation"
      *      ),
-     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -282,7 +171,7 @@ class TeamController extends Controller
      *      security={ {"sanctum": {}} }
      * )
      */
-    public function update(UpdateTeamRequest $request, int $teamId)
+    public function store(AddStudentToTeamRequest $request, int $teamId)
     {
         try {
 
@@ -292,7 +181,7 @@ class TeamController extends Controller
                 return response()->json(['message' => 'Team not found'], Response::HTTP_NOT_FOUND);
             }
 
-            return $this->teamService->updateTeam($request, $teamId);
+            return $this->teamService->addStudentToTeam($request, $teamId);
 
         } catch (Throwable $th) {
             Log::error($th->getMessage());
@@ -302,15 +191,26 @@ class TeamController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a student from a team.
      *
      * @OA\Delete(
-     *      path="/teams/{teamId}",
-     *      summary="Delete team",
-     *      tags={"Teams"},
+     *      path="/teams/{teamId}/students/{studentId}",
+     *      summary="Remove student from team",
+     *      tags={"TeamStudentAssociations"},
      *
      *      @OA\Parameter(
      *          name="teamId",
+     *          in="path",
+     *          required=true,
+     *
+     *          @OA\Schema(
+     *              type="integer",
+     *              example=1
+     *          )
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="studentId",
      *          in="path",
      *          required=true,
      *
@@ -322,11 +222,8 @@ class TeamController extends Controller
      *
      *      @OA\Response(
      *          response=204,
-     *          description="Successful operation",
-     *
-     *          @OA\JsonContent()
+     *          description="Successful operation"
      *      ),
-     *
      *      @OA\Response(
      *          response=400,
      *          description="Bad Request"
@@ -346,7 +243,7 @@ class TeamController extends Controller
      *      security={ {"sanctum": {}} }
      * )
      */
-    public function destroy(int $teamId)
+    public function destroy(int $teamId, int $studentId)
     {
         try {
 
@@ -356,9 +253,10 @@ class TeamController extends Controller
                 return response()->json(['message' => 'Team not found'], Response::HTTP_NOT_FOUND);
             }
 
-            $team = $this->teamService->deleteTeam($teamId);
+            $association = $this->teamService->removeStudentFromTeam($studentId, $teamId);
 
-            return response()->json($team, Response::HTTP_NO_CONTENT);
+            return response()->json($association, Response::HTTP_NO_CONTENT);
+
         } catch (Throwable $th) {
             Log::error($th->getMessage());
 

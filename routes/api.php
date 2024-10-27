@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamStudentAssociationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/student', StudentController::class);
     Route::apiResource('/team', TeamController::class);
+    Route::apiResource('/team/{teamId}/students', TeamStudentAssociationController::class)->only(['index', 'store', 'destroy']);
 });

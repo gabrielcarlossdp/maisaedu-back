@@ -18,7 +18,9 @@ it('lists teams', function () {
 it('creates a team', function () {
     $user = User::factory()->create();
 
-    $team = Team::factory()->make();
+    $team = Team::factory()->make([
+        'creator_id' => $user->id,
+    ]);
 
     $response = $this->postJson('/api/team', $team->toArray(), [
         'Authorization' => 'Bearer '.$user->createToken('auth_token')->plainTextToken,
