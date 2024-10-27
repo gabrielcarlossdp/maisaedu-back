@@ -60,7 +60,10 @@ class StudentService
     public function updateStudent(Request $request, int $id): Student
     {
         $student = Student::find($id);
-        $student->update($request->all());
+        $student->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+        ]);
 
         return $student;
     }
